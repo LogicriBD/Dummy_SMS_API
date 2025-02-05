@@ -1,13 +1,13 @@
 {
-  "name": "mongo-express-api-template",
+  "name": "dummy-sms-api",
   "version": "1.0.0",
-  "description": "Mongo Express API Template for serving RESTful API",
+  "description": "This is a simple SMS Mock application to test SMS Gateway integration with backend services",
   "main": "src/index.js",
   "repository": "https://github.com/LogicriBD/Mongo_Express_API_Template.git",
   "author": "Mirza Mohammad Azwad | Logicri",
   "license": "MIT",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "build": "tsc -p ./",

@@ -9,11 +9,10 @@ import { log } from './utils/Helper';
 import { registerMessageQueueConsumers } from './utils/misc/MessageBroker';
 import { SystemAdminAccountSeeder } from './database/seeder/SystemAdminAccountSeeder';
 import { MongoDBClient } from './provider/MongoDBClient';
-import { GracefulDegradation } from './provider/GracefulDegradation';
+import { ProcessManager } from './provider/ProcessManager';
 
 const initialize = async () => {
   MongoDBClient.getInstance().connect(async () => {
-
     await new SystemAdminAccountSeeder().seed();
   });
   await RabbitMQClient.connect();
@@ -32,4 +31,4 @@ const initialize = async () => {
   };
 };
 
-GracefulDegradation.getInstance(initialize)
+ProcessManager.getInstance(initialize);

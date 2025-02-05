@@ -3,11 +3,12 @@ import { log } from '../utils/Helper';
 import { SignalActions } from '../utils/misc/SignalManager';
 import { RabbitMQClient } from './RabbitMQClient';
 import { IncomingMessage, Server, ServerResponse } from 'http';
+import { PortKiller } from '../utils/misc/PortKiller';
 
 export const criticalErrorCodes = ['ECONNREFUSED', 'EADDRINUSE', 'EPIPE', 'ENOMEM', 'CORS'];
 
-export class GracefulDegradation {
-  private static instance: GracefulDegradation;
+export class ProcessManager {
+  private static instance: ProcessManager;
   private server?: Server<typeof IncomingMessage, typeof ServerResponse>;
 
   private constructor() {
@@ -19,12 +20,12 @@ export class GracefulDegradation {
       server: Server<typeof IncomingMessage, typeof ServerResponse>;
     }>,
   ) {
-    if (!GracefulDegradation.instance) {
-      GracefulDegradation.instance = new GracefulDegradation();
-      GracefulDegradation.instance.server = (await initialize()).server;
+    if (!ProcessManager.instance) {
+      ProcessManager.instance = new ProcessManager();
+      ProcessManager.instance.server = (await initialize()).server;
     } else {
-      GracefulDegradation.instance.server = (await initialize()).server;
-      return GracefulDegradation.instance;
+      ProcessManager.instance.server = (await initialize()).server;
+      return ProcessManager.instance;
     }
   }
 
@@ -35,11 +36,11 @@ export class GracefulDegradation {
   }
 
   handleUncaughtException() {
-    process.on('uncaughtException', (err: any) => {
-      log('error', `Uncaught Exception: ${JSON.stringify(err)}`);
+    process.on('uncaughtException', async (err: any) => {
+      log('error', `⛔️ Uncaught Exception: ${JSON.stringify(err)}`);
 
-      if (this.isCriticalError(err)) {
-        this.shutdown(() => process.exit(1));
+      if (await this.isCriticalError(err)) {
+        await this.shutdown(1);
       } else {
         log('warn', 'Non-critical exception. Continuing...');
       }
@@ -47,16 +48,16 @@ export class GracefulDegradation {
   }
 
   handleUnhandledRejection() {
-    process.on('unhandledRejection', (reason, promise) => {
-      log('error', `Unhandled Rejection at: ${JSON.stringify(promise)}, reason: ${reason}`);
+    process.on('unhandledRejection', async (reason, promise) => {
+      log('error', `⛔️ Unhandled Rejection at: ${JSON.stringify(promise)}, reason: ${reason}`);
 
       if (process.env.NODE_ENV === 'production') {
         // Consider alerting a monitoring system like Sentry
         // sendAlert('Unhandled Rejection', { reason, promise });
       }
 
-      if (this.isCriticalError(reason)) {
-        this.shutdown(() => process.exit(1));
+      if (await this.isCriticalError(reason)) {
+        await this.shutdown(1);
       }
     });
   }
@@ -64,13 +65,13 @@ export class GracefulDegradation {
   handleSignals() {
     SignalActions.forEach((signal) => {
       process.on(signal.code, async () => {
+        log('info', `⛔️ ${signal.code}: Received ${signal.message}`);
         switch (signal.action) {
           case 'shutdown':
-            log('info', `${signal.code}: Received ${signal.message}`);
-            await this.shutdown(() => process.exit(0));
+            await this.shutdown(0);
             break;
           case 'log':
-            log('info', `LOG: Received ${signal.message}`);
+            log('info', `💫 LOG: Received ${signal.message}`);
             // Consider alerting a monitoring system like Sentry
             // sendAlert('LOG', { code, message });
             break;
@@ -79,28 +80,33 @@ export class GracefulDegradation {
     });
   }
 
-  private isCriticalError(error: any) {
+  private async isCriticalError(error: any) {
     if (!error) return false;
+    if (error.code === 'EADDRINUSE' && process.env.HTTP_PORT && process.env.NODE_ENV === 'development') {
+      const portKiller = new PortKiller(Number(process.env.HTTP_PORT!));
+      await portKiller.killProcess();
+    }
     if (error.code && criticalErrorCodes.includes(error.code)) {
       return true;
     }
 
-    if (error.status && error.status >= 500) {
+    if (error.status && error.status > 500) {
       return true;
     }
     return false;
   }
 
-  async shutdown(callback: () => void) {
-    log('info', '🔌 Shutting down gracefully');
+  /**
+   *
+   * @param returnCode 0 for success, 1 for failure
+   */
+  async shutdown(returnCode: 0 | 1) {
+    console.log('🔌 Shutting down gracefully');
     await RabbitMQClient.disconnect();
-    log('info', '🔌 RabbitMQ connection closed');
     await mongoose.connection.close(true);
-    log('warn', '🔌 MongoDB connection closed');
-    this.server?.close(() => {
-      log('info', '✅ HTTP server closed');
-      callback();
+    await this.server?.close(() => {
+      console.log('✅ HTTP server closed');
     });
-    callback();
+    process.exit(returnCode);
   }
 }
