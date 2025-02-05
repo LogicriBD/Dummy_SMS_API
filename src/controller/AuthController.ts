@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Controller, POST } from '../types/Controller';
-import { LoginRequestBody, loginValidator } from '../validation/rest-api/auth/LoginRequest';
+import { LoginRequestBody, loginValidator } from '../validation/auth/LoginRequest';
 import { EmailVerificationAction } from '../actions/auth/EmailVerificationAction';
 import { LoginAction } from '../actions/auth/LoginAction';
 import { LogoutAction } from '../actions/auth/LogoutAction';
@@ -8,13 +8,13 @@ import { RefreshTokenAction } from '../actions/auth/RefreshTokenAction';
 import { ForgotPasswordAction } from '../actions/auth/ForgotPasswordAction';
 import { ResetPasswordAction } from '../actions/auth/ResetPasswordAction';
 import { ResetPasswordVerificationAction } from '../actions/auth/ResetPasswordVerificationAction';
-import { logoutValidator } from '../validation/rest-api/auth/LogoutRequest';
-import { authTokenRefreshValidator } from '../validation/rest-api/auth/AuthTokenRefreshRequest';
-import { forgotPasswordValidator } from '../validation/rest-api/auth/ForgotPasswordRequest';
-import { resetPasswordValidator } from '../validation/rest-api/auth/ResetPasswordRequest';
-import { resetPasswordVerificationValidator } from '../validation/rest-api/auth/ResetPasswordVerificationRequest';
-import { emailVerificationValidator } from '../validation/rest-api/auth/EmailVerificationRequest';
-import { RegistrationRequestBody, registrationValidator } from '../validation/rest-api/auth/RegistrationRequest';
+import { logoutValidator } from '../validation/auth/LogoutRequest';
+import { authTokenRefreshValidator } from '../validation/auth/AuthTokenRefreshRequest';
+import { forgotPasswordValidator } from '../validation/auth/ForgotPasswordRequest';
+import { resetPasswordValidator } from '../validation/auth/ResetPasswordRequest';
+import { resetPasswordVerificationValidator } from '../validation/auth/ResetPasswordVerificationRequest';
+import { emailVerificationValidator } from '../validation/auth/EmailVerificationRequest';
+import { RegistrationRequestBody, registrationValidator } from '../validation/auth/RegistrationRequest';
 import { RegistrationAction } from '../actions/auth/RegistrationAction';
 
 @Controller
@@ -31,7 +31,11 @@ export class AuthController {
   }
 
   @POST('/register', [registrationValidator])
-  public async register(req: Request<unknown, unknown, RegistrationRequestBody, unknown>, res: Response, next: NextFunction) {
+  public async register(
+    req: Request<unknown, unknown, RegistrationRequestBody, unknown>,
+    res: Response,
+    next: NextFunction,
+  ) {
     try {
       const loginAction = new RegistrationAction(req.body);
       const response = await loginAction.execute();

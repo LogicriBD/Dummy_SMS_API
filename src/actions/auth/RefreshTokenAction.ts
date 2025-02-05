@@ -2,7 +2,7 @@ import { AuthRepository } from '../../database/repository/AuthRepository';
 import { Action } from '../../types/Action';
 import { TokenType } from '../../types/enums/AuthToken';
 import { AuthManager } from '../../utils/AuthManager';
-import { AuthTokenRefreshRequestBody } from '../../validation/rest-api/auth/AuthTokenRefreshRequest';
+import { AuthTokenRefreshRequestBody } from '../../validation/auth/AuthTokenRefreshRequest';
 
 export class RefreshTokenAction implements Action {
   constructor(private payload: AuthTokenRefreshRequestBody) {}

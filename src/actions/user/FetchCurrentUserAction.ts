@@ -1,4 +1,3 @@
-import { omit } from 'lodash';
 import { UserRepository } from '../../database/repository/UserRepository';
 import { Action } from '../../types/Action';
 import { filterUser } from '../../utils/Helper';

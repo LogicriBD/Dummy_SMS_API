@@ -18,6 +18,12 @@ export const possiblyEmptyEmail = z
   });
 
 export const possiblyEmptyString = z.string().trim().min(0);
+export const maskingSchema = z
+  .string()
+  .optional()
+  .refine((masking) => (masking && masking.length <= 11) || !masking, {
+    message: 'Masking should be at most 11 characters long',
+  });
 export const resourceIDSchema = z.string().length(24);
 export const phoneNumberSchema = z
   .string()

@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import { UserRepository } from '../../database/repository/UserRepository';
 import { Action } from '../../types/Action';
 import { ApiError } from '../../utils/ApiError';
-import { LoginRequestBody } from '../../validation/rest-api/auth/LoginRequest';
+import { LoginRequestBody } from '../../validation/auth/LoginRequest';
 import bcrypt from 'bcrypt';
 import { AuthManager } from '../../utils/AuthManager';
 import { TokenType } from '../../types/enums/AuthToken';

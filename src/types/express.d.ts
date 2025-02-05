@@ -7,7 +7,7 @@ declare global {
       id: string;
       email: string;
       username: string;
-      type: UserType;
+      phone: string[];
       active: boolean;
       verified: boolean;
       lock?: {

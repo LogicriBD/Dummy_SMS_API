@@ -24,6 +24,12 @@ class UserRepositoyImpl {
     return user;
   }
 
+  async findOneByEmail(email: string) {
+    return await User.findOne({
+      email,
+    });
+  }
+
   async findByUsername(username: string) {
     const user = await User.findOne({
       username,
@@ -49,10 +55,6 @@ class UserRepositoyImpl {
     if (params.search) {
       findParams.username = { $regex: new RegExp(params.search, 'i') };
     }
-    if (params.userType) {
-      findParams.type = params.userType;
-    }
-
     if (params.page && params.limit) {
       return await User.find(findParams)
         .select('-password')
@@ -66,9 +68,6 @@ class UserRepositoyImpl {
     const findParams: FilterQuery<UserProps> = {};
     if (params.search) {
       findParams.username = { $regex: new RegExp(params.search, 'i') };
-    }
-    if (params.userType) {
-      findParams.type = params.userType;
     }
 
     return await User.countDocuments(findParams);

@@ -1,5 +1,5 @@
 import { AuthController } from '../../controller/AuthController';
-import { SampleController } from '../../controller/SampleController';
+import { SMSController } from '../../controller/SMSController';
 import { UserController } from '../../controller/UserController';
 import { Endpoint, Route, SubRoute } from '../../types/Routing';
 import { Express, NextFunction, Request, Response, Router } from 'express';
@@ -18,6 +18,8 @@ class ExpressRouterImpl {
     '/auth/refresh-token',
     '/auth/forgot-password',
     '/auth/reset-password',
+    '/sms/send-text',
+    '/sms/send-multimedia',
   ];
 
   private constructor() {
@@ -31,15 +33,20 @@ class ExpressRouterImpl {
         controller: new UserController(),
       },
       {
-        basePath: '/sample',
-        controller: new SampleController(),
+        basePath: '/sms',
+        controller: new SMSController(),
       },
     ];
     this.router = Router();
   }
 
   public isPublicRoute(path: string) {
-    return this.unprotectedRoutes.includes(path);
+    for (const route of this.unprotectedRoutes) {
+      if (path.includes(route)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public traverseRouteTree = (route: SubRoute, basePath: string) => {

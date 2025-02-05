@@ -6,7 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/user/update
-  body: multipartForm
+  body: json
   auth: bearer
 }
 
@@ -16,7 +16,11 @@ auth:bearer {
 
 body:json {
   {
-    "username":"sudo"
+    "username":"sudo",
+    "phone":[
+      "01991681338",
+      "01711526723"
+    ]
   }
 }
 

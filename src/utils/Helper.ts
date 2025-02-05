@@ -27,9 +27,7 @@ export const filterUser = (user: UserProps & { _id: any }) => {
     _id: user._id,
     email: user.email,
     username: user.username,
-    photo: user.photo,
     phone: user.phone,
-    type: user.type,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };

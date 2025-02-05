@@ -4,19 +4,12 @@ meta {
   seq: 1
 }
 
-post {
-  url: {{baseUrl}}/sample/sms
+get {
+  url: {{baseUrl}}/sms/send-text/sudo/{{password}}/TEXT/Dummy/01991681338/Hello
   body: json
   auth: bearer
 }
 
 auth:bearer {
   token: {{accessToken}}
-}
-
-body:json {
-  {
-    "phone":"01991681338",
-    "text":"Hello World"
-  }
 }

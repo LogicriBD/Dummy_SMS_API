@@ -4,7 +4,7 @@ import { UserRepository } from '../../database/repository/UserRepository';
 import { Action } from '../../types/Action';
 import { TokenType } from '../../types/enums/AuthToken';
 import { ApiError } from '../../utils/ApiError';
-import { EmailVerificationRequestBody } from '../../validation/rest-api/auth/EmailVerificationRequest';
+import { EmailVerificationRequestBody } from '../../validation/auth/EmailVerificationRequest';
 import { OTPTypes } from '../../types/enums/User';
 
 export class EmailVerificationAction implements Action {

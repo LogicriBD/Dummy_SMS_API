@@ -4,7 +4,7 @@ import { Action } from '../../types/Action';
 import { TokenType } from '../../types/enums/AuthToken';
 import { ApiError } from '../../utils/ApiError';
 import { AuthManager } from '../../utils/AuthManager';
-import { ResetPasswordVerificationRequestBody } from '../../validation/rest-api/auth/ResetPasswordVerificationRequest';
+import { ResetPasswordVerificationRequestBody } from '../../validation/auth/ResetPasswordVerificationRequest';
 import { OTPTypes } from '../../types/enums/User';
 
 export class ResetPasswordVerificationAction implements Action {

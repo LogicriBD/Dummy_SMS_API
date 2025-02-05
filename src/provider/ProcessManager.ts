@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { log } from '../utils/Helper';
 import { SignalActions } from '../utils/misc/SignalManager';
-import { RabbitMQClient } from './RabbitMQClient';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import { PortKiller } from '../utils/misc/PortKiller';
 
@@ -102,7 +101,6 @@ export class ProcessManager {
    */
   async shutdown(returnCode: 0 | 1) {
     console.log('🔌 Shutting down gracefully');
-    await RabbitMQClient.disconnect();
     await mongoose.connection.close(true);
     await this.server?.close(() => {
       console.log('✅ HTTP server closed');

@@ -1,7 +1,7 @@
 import { UserRepository } from '../../database/repository/UserRepository';
 import { Action } from '../../types/Action';
 import { AuthManager } from '../../utils/AuthManager';
-import { ResetPasswordRequestBody } from '../../validation/rest-api/auth/ResetPasswordRequest';
+import { ResetPasswordRequestBody } from '../../validation/auth/ResetPasswordRequest';
 import bcrypt from 'bcrypt';
 
 export class ResetPasswordAction implements Action {

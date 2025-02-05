@@ -1,10 +1,6 @@
-import fs from 'fs';
 import { UserRepository } from '../../database/repository/UserRepository';
-import { StorageFolder, StorageService } from '../../provider/StorageService';
 import { Action } from '../../types/Action';
-import { UpdateUserPayload } from '../../types/dto/User';
-import { UpdateUserRequestBody } from '../../validation/rest-api/user/UpdateProfileRequest';
-import { omit } from 'lodash';
+import { UpdateUserRequestBody } from '../../validation/user/UpdateProfileRequest';
 import { filterUser } from '../../utils/Helper';
 
 export class UpdateCurrentUserAction implements Action {
@@ -15,16 +11,7 @@ export class UpdateCurrentUserAction implements Action {
   ) {}
 
   public async execute() {
-    const fileUrl = await StorageService.uploadFileFromPath({
-      keys: [StorageFolder.user, this.file.path],
-    });
-
-    const updatePayload: UpdateUserPayload = {
-      ...this.payload,
-      photo: fileUrl.downloadUrl,
-    };
-    const user = await UserRepository.updateById(this.currentUser.id, updatePayload);
-    fs.unlinkSync(this.file.path);
+    const user = await UserRepository.updateById(this.currentUser.id, this.payload);
     return {
       user: filterUser(user),
     };

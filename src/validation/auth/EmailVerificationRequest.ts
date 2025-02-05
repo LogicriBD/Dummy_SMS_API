@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { validateRequestPayload } from '../../../middleware/ValidateRequestPayload';
+import { validateRequestPayload } from '../../middleware/ValidateRequestPayload';
 
 export const emailVerificationSchema = z.object({
   otp: z.string().length(6),

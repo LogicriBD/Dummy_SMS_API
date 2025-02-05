@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { validateRequestPayload } from '../../../middleware/ValidateRequestPayload';
-import { elevenDigitPhoneNumberSchema } from '../../../utils/Validation';
+import { validateRequestPayload } from '../../middleware/ValidateRequestPayload';
+import { elevenDigitPhoneNumberSchema } from '../../utils/Validation';
 
 export const updateUserRequestSchema = z.object({
   username: z.string().optional(),
-  phone: elevenDigitPhoneNumberSchema.optional(),
+  phone: z.array(elevenDigitPhoneNumberSchema).optional(),
 });
 
 export type UpdateUserRequestBody = z.infer<typeof updateUserRequestSchema>;

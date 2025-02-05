@@ -4,7 +4,7 @@ import { Action } from '../../types/Action';
 import { TokenType } from '../../types/enums/AuthToken';
 import { ApiError } from '../../utils/ApiError';
 import { AuthManager } from '../../utils/AuthManager';
-import { ForgotPasswordRequestBody } from '../../validation/rest-api/auth/ForgotPasswordRequest';
+import { ForgotPasswordRequestBody } from '../../validation/auth/ForgotPasswordRequest';
 import { ForgotPasswordEmail } from '../../utils/email/ForgotPasswordEmail';
 import { EmailService } from '../../provider/EmailService';
 import { makeOTPCode } from '../../utils/Helper';

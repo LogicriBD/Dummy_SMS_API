@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import { AuthRepository } from '../../database/repository/AuthRepository';
 import { Action } from '../../types/Action';
 import { ApiError } from '../../utils/ApiError';
-import { LogoutRequestBody } from '../../validation/rest-api/auth/LogoutRequest';
+import { LogoutRequestBody } from '../../validation/auth/LogoutRequest';
 
 export class LogoutAction implements Action {
   constructor(

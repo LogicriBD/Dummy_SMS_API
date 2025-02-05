@@ -22,6 +22,7 @@ export const StorageFolder = {
   receipts: 'receipts',
   invoices: 'invoices',
   reports: 'reports',
+  media: 'media',
 };
 
 export type FileUploadOptions = {
@@ -79,7 +80,9 @@ class StorageServiceImpl {
     const options = {
       expiresIn: 30 * 60, // 30 Minutes
     };
-    return await getSignedUrl(this.disk, command, options);
+    return await getSignedUrl(this.disk, command, {
+      ...options,
+    });
   }
 
   private getObjectKeyFrom(urlOrKey: string) {

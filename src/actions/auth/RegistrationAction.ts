@@ -4,7 +4,7 @@ import { Action } from '../../types/Action';
 import { TokenType } from '../../types/enums/AuthToken';
 import { ApiError } from '../../utils/ApiError';
 import { AuthManager } from '../../utils/AuthManager';
-import { RegistrationRequestBody } from '../../validation/rest-api/auth/RegistrationRequest';
+import { RegistrationRequestBody } from '../../validation/auth/RegistrationRequest';
 import bcrypt from 'bcrypt';
 import { makeOTPCode } from '../../utils/Helper';
 import { OTPTypes } from '../../types/enums/User';

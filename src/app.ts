@@ -4,22 +4,18 @@ require('dotenv').config();
 import { registerGlobalEventListeners } from './provider/EventBus';
 import { HttpServer } from './provider/HttpServer';
 import { registerScheduledJobs } from './provider/JobScheduler';
-import { RabbitMQClient } from './provider/RabbitMQClient';
 import { log } from './utils/Helper';
-import { registerMessageQueueConsumers } from './utils/misc/MessageBroker';
-import { SystemAdminAccountSeeder } from './database/seeder/SystemAdminAccountSeeder';
+import { DummyAccountSeeder } from './database/seeder/DummyAccountSeeder';
 import { MongoDBClient } from './provider/MongoDBClient';
 import { ProcessManager } from './provider/ProcessManager';
 
 const initialize = async () => {
   MongoDBClient.getInstance().connect(async () => {
-    await new SystemAdminAccountSeeder().seed();
+    await new DummyAccountSeeder().seed();
   });
-  await RabbitMQClient.connect();
 
   registerScheduledJobs();
   registerGlobalEventListeners();
-  await registerMessageQueueConsumers();
 
   return {
     server: HttpServer.listen(process.env.HTTP_PORT, () => {

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { validateRequestPayload } from '../../../middleware/ValidateRequestPayload';
+import { validateRequestPayload } from '../../middleware/ValidateRequestPayload';
 
 export const resetPasswordSchema = z.object({
   token: z.string().min(32),

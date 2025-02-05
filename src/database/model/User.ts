@@ -1,19 +1,17 @@
 import { Document, Model, Schema, model } from 'mongoose';
-import { allUserTypes, OTPTypes, UserType } from '../../types/enums/User';
+import { OTPTypes } from '../../types/enums/User';
 
 export const userModes = ['production', 'development', 'test'] as const;
-export const otpTypes = ['email', 'forgot-password', 'phone'] as const;
+export const otpTypes = ['email', 'forgot-password'] as const;
 export type OTPType = (typeof otpTypes)[number];
 export type UserMode = (typeof userModes)[number];
 
 export interface UserProps extends Document {
   email: string;
   username: string;
-  photo?: string;
-  phone?: string;
   password: string;
-  type: UserType;
   mode?: UserMode;
+  phone: string[];
   active: boolean;
   verified: boolean;
   otp?: {
@@ -37,7 +35,7 @@ export interface UserProps extends Document {
   updatedAt: Date;
 }
 
-export type UserAuthInfo = { id: string } & Pick<UserProps, 'username' | 'photo' | 'type' | 'active' | 'verified' | 'lock'>;
+export type UserAuthInfo = { id: string } & Pick<UserProps, 'username' | 'phone' | 'active' | 'verified' | 'lock'>;
 export type UserMethods = {
   getAuthInfo: () => UserAuthInfo;
 };
@@ -52,22 +50,13 @@ const schema = new Schema<UserProps, UserModel, UserMethods>(
       type: Schema.Types.String,
       required: true,
     },
-    phone: {
-      type: Schema.Types.String,
-      required: false,
-    },
     password: {
       type: Schema.Types.String,
       required: true,
     },
-    photo: {
-      type: Schema.Types.String,
+    phone: {
+      type: [Schema.Types.String],
       required: false,
-    },
-    type: {
-      type: Schema.Types.String,
-      required: true,
-      enum: allUserTypes,
     },
     mode: {
       type: Schema.Types.String,
@@ -140,16 +129,25 @@ const schema = new Schema<UserProps, UserModel, UserMethods>(
     versionKey: false,
     timestamps: true,
     collection: 'users',
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        delete ret.password;
+        delete ret.__v;
+        ret.id = ret._id;
+        delete ret.otp;
+        return ret;
+      },
+    },
   },
 );
 
-schema.methods.getAuthInfo = function () {
+schema.methods.getAuthInfo = function (): Express.User {
   return {
     id: String(this._id),
     email: this.email,
     username: this.username,
-    type: this.type,
-    photo: this.photo,
+    phone: this.phone,
     active: this.active,
     verified: this.verified,
     lock: this.lock,
@@ -157,6 +155,7 @@ schema.methods.getAuthInfo = function () {
 };
 
 schema.index({ email: 1 }, { name: 'by_email', unique: true });
+schema.index({ username: 1 }, { name: 'by_username', unique: true });
 schema.index(
   { 'otp.code': 1 },
   { name: 'by_otp_code', unique: true, partialFilterExpression: { 'otp.code': { $exists: true } }, sparse: true },
@@ -169,10 +168,6 @@ schema.index(
     partialFilterExpression: { 'auth.refreshToken': { $exists: true } },
     sparse: true,
   },
-);
-schema.index(
-  { phone: 1 },
-  { name: 'by_phone', unique: true, partialFilterExpression: { phone: { $exists: true } }, sparse: true },
 );
 
 export const User = model<UserProps, UserModel>('User', schema);

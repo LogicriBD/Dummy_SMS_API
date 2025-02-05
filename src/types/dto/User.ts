@@ -1,15 +1,13 @@
-import { UserType } from '../enums/User';
-
 export type CreateUserPayload = {
   username: string;
   email: string;
   password: string;
+  verified?: boolean;
 };
 
 export type UpdateUserPayload = {
   username?: string;
-  phone?: string;
-  photo?: string;
+  phone?: string[];
   otp?: {
     code: string;
     issuedAt: Date;
@@ -19,7 +17,6 @@ export type UpdateUserPayload = {
 };
 
 export type FindUserParams = {
-  userType?: UserType;
   search?: string;
   page: number;
   limit: number;
