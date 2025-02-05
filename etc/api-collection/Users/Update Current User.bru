@@ -1,0 +1,30 @@
+meta {
+  name: Update Current User
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/user/update
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "username":"sudo"
+  }
+}
+
+body:form-urlencoded {
+  : 
+}
+
+body:multipart-form {
+  username: sudo
+  avatar: @file(/home/mirza-mohammad-azwad/Pictures/zoro.jpeg)
+}

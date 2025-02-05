@@ -1,0 +1,18 @@
+meta {
+  name: Email Verification
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/auth/email-verification
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "otp":"182757",
+    "token":"{{emailVerificationToken}}"
+  }
+}

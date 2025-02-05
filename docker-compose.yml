@@ -1,0 +1,13 @@
+services:
+
+  rabbitmq:
+    image: rabbitmq:4.0-management
+    container_name: bitoron-rabbitmq
+    ports:
+      - '5673:5672'
+      - '15673:15672'
+    networks:
+      - bitoron-network
+
+networks:
+  bitoron-network:

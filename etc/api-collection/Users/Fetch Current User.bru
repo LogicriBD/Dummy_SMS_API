@@ -1,0 +1,15 @@
+meta {
+  name: Fetch Current User
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/user/fetch
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
