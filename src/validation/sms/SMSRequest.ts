@@ -37,7 +37,10 @@ export const multimediaSMSRequestValidator = async (req: Request, res: Response,
     }
     const isReceiverValid = user.phone.includes(req.body.receiver);
     if (!isReceiverValid) {
-      throw new ApiError(StatusCodes.UNAUTHORIZED, 'Invalid receiver, receiver not found for given username');
+      throw new ApiError(
+        StatusCodes.UNAUTHORIZED,
+        `Invalid receiver, ${req.body.receiver} receiver not found for given username`,
+      );
     }
     return validateRequestPayload(smsSchema)(req, res, next);
   } catch (error) {
@@ -67,7 +70,10 @@ export const textSMSRequestValidator = async (req: Request, res: Response, next:
     }
     const isReceiverValid = user.phone.includes(req.params.receiver);
     if (!isReceiverValid) {
-      throw new ApiError(StatusCodes.UNAUTHORIZED, 'Invalid receiver, receiver not found for given username');
+      throw new ApiError(
+        StatusCodes.UNAUTHORIZED,
+        `Invalid receiver, ${req.params.receiver} receiver not found for given username`,
+      );
     }
 
     const result = smsSchema.safeParse(payload);

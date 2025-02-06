@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>Dummy SMS API Server</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: linear-gradient(to bottom, #6495ed, #059669);
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .container {
+        text-align: center;
+        padding: 50px;
+        border-radius: 10px;
+        background-color: #282a35;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      h1 {
+        color: #fff;
+        font-size: 2.5em;
+        margin: 0;
+      }
+
+      .version {
+        font-size: 1.4em;
+        color: #414450;
+        font-weight: bolder;
+      }
+
+      .status {
+        font-size: 1.4em;
+        color: #fff;
+        font-weight: bolder;
+      }
+
+      button {
+        margin-top: 20px;
+        font-size: 1.2em;
+        padding-left: 4%;
+        padding-right: 4%;
+        padding-top: 2%;
+        padding-bottom: 2%;
+        border-radius: 25px;
+        color: white;
+        background-color: #51e3cb;
+        font-weight: bolder;
+        font-size: large;
+        border: 2px;
+        border-color: #51e3cb;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #51ffff;
+        color: white;
+      }
+
+      a {
+        all: unset;
+      }
+
+      footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        margin-top: 20px;
+        font-size: 1em;
+        background-color: #282a35;
+        color: #a9a9a9;
+        padding-bottom: 20px;
+        padding-top: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+        font-weight: bolder;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="container">
+        <div>
+          <img src="/favicon.ico" alt="Songjog Logo" style="border-radius: 100%; margin: 3%" />
+        </div>
+        <h1>Welcome to Dummy SMS API Server!</h1>
+        <p class="status">API server is running successfully.</p>
+        <p class="version">Version: <%= appVersion %></p>
+        <a href="/api-docs"> <button>View API Documentation</button></a>
+      </div>
+    </main>
+    <footer>Developed by Logicri</footer>
+  </body>
+</html>

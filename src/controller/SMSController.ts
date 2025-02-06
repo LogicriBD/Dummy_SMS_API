@@ -13,7 +13,7 @@ import { FetchSMSParams, fetchSMSValidator } from '../validation/sms/FetchSMSReq
 
 @Controller
 export class SMSController {
-  @GET('/send-text/:userName/:password/:MsgType/:masking/:receiver/:message', [textSMSRequestValidator])
+  @GET('/send-text/:userName/:password/:receiver/:message/:masking/:MsgType', [textSMSRequestValidator])
   public async sendSMS(req: Request<SMSRequestParams>, res: Response, next: NextFunction) {
     try {
       const smsAction = new SMSCreateAction(req.params);

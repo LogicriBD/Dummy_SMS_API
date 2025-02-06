@@ -3,6 +3,12 @@ import { SMSController } from '../../controller/SMSController';
 import { UserController } from '../../controller/UserController';
 import { Endpoint, Route, SubRoute } from '../../types/Routing';
 import { Express, NextFunction, Request, Response, Router } from 'express';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+import { SwaggerConfiguration } from '../SwaggerConfiguration';
+import { ApiError } from '../ApiError';
+import { StatusCodes } from 'http-status-codes';
+const specification = swaggerJsdoc(SwaggerConfiguration.getSwaggerJSDoc());
 
 class ExpressRouterImpl {
   private routes: Route[];
@@ -19,6 +25,7 @@ class ExpressRouterImpl {
     '/auth/forgot-password',
     '/auth/reset-password',
     '/sms/send-text',
+    '/health',
     '/sms/send-multimedia',
   ];
 
@@ -86,7 +93,13 @@ class ExpressRouterImpl {
         next(err);
       }
     });
+    this.router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specification, SwaggerConfiguration.styleOptions));
     this.paths.push('/');
+    this.paths.push('/api-docs');
+    this.router.get('/health', (req: Request, res: Response) => {
+      res.status(StatusCodes.OK).render('index', { appVersion: process.env.API_VERSION });
+    });
+    this.paths.push('/health');
   }
 
   public getRoutes() {

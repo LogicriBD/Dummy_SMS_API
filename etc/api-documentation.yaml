@@ -1,0 +1,130 @@
+openapi: 3.1.0
+info:
+  title: Dummy SMS API Documentation
+  version: ${API_VERSION}
+  description: This is the API documentation for Dummy SMS API developed by Logicri
+  contact:
+    name: Mirza Mohammad Azwad | Logicri
+servers:
+- url: ${API_URL}
+  description: ${NODE_ENV}
+tags:
+- name: SMS
+  description: SMS API for sending SMS to users
+
+paths:
+  /sms/send-text/{userName}/{password}/{receiver}/{message}/{masking}/{MsgType}:
+    get:
+      summary: SMS API for sending text messages
+      tags:
+      - SMS
+      parameters:
+      - name: userName
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Username for the SMS API
+      - name: password
+        in: path
+        required: true
+        schema:
+          type: string
+          format: password
+        description: Password for the SMS API
+      - name: receiver
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The receiver phone number for the SMS
+      - name: message
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The message to be sent to the receiver
+      - name: masking
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The masking for the SMS
+      - name: MsgType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum: [ TEXT ]
+        description: The type of the message (TEXT or MULTIMEDIA)
+      responses:
+        '200':
+          description: Successful Response
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /sms/send-multimedia:
+    post:
+      summary: Send a multimedia SMS
+      tags:
+      - SMS
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - userName
+              - password
+              - MsgType
+              - message
+              - receiver
+              - masking
+              - media
+              properties:
+                userName:
+                  type: string
+                  description: Username for authentication
+                password:
+                  type: string
+                  format: password
+                  description: API password for authentication
+                MsgType:
+                  type: string
+                  enum: [ MULTIMEDIA ]
+                  description: Type of message to send
+                message:
+                  type: string
+                  description: The message content
+                receiver:
+                  type: string
+                  description: The recipient phone number
+                masking:
+                  type: string
+                  description: The masking for the SMS
+                media:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: The multimedia files to be sent
+      responses:
+        '200':
+          description: Multimedia SMS sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '400':
+          description: Bad Request (Missing parameters or invalid data)
+        '401':
+          description: Unauthorized (Invalid credentials)
+        '500':
+          description: Internal Server Error
