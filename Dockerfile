@@ -34,7 +34,7 @@ RUN npm run build
 
 COPY src/public dist/public
 
-COPY src/views dist/views
+COPY src/view dist/view
 
 # command to run within the container
 CMD ["npm", "run", "start"]
