@@ -32,5 +32,9 @@ EXPOSE 10000
 # build the codebase
 RUN npm run build
 
+COPY src/public dist/public
+
+COPY src/views dist/views
+
 # command to run within the container
 CMD ["npm", "run", "start"]
