@@ -1,9 +1,6 @@
 # Here we are getting our node as Base image
 FROM node:20.5-alpine
 
-ARG ENV_FILE
-ARG APP_PORT
-
 # install pm2 package globally
 RUN npm install pm2 -g
 
@@ -29,12 +26,8 @@ RUN npm install
 # grant permission of node project directory to node user
 COPY --chown=node:node . .
 
-# copy environment variables
-COPY $ENV_FILE ./
-RUN mv $ENV_FILE .env
-
 # container exposed network port number
-EXPOSE $APP_PORT
+EXPOSE 10000
 
 # build the codebase
 RUN npm run build
