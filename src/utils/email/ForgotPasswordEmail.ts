@@ -3,7 +3,7 @@ import { PrettifyEmail } from '../PrettifyEmail';
 
 type ForgotPasswordPayload = {
   email: string;
-  token: string;
+  otp: string;
   expiresIn: Date;
 };
 
@@ -11,10 +11,10 @@ export class ForgotPasswordEmail implements EmailMessage {
   constructor(private payload: ForgotPasswordPayload) {}
 
   getMessage = () => {
-    const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password?token=${this.payload.token}`;
-    const message = `Your password reset link is: ${PrettifyEmail.insertLink(resetPasswordUrl)}${
-      PrettifyEmail.tabSpace
-    }This link will expire in ${this.payload.expiresIn.getHours()} hours. If you did not request this, please ignore this email and your password will remain unchanged.`;
+    const message = `Please verify your reset password request ${PrettifyEmail.linebreak}
+      Enter the following otp to verify your request:${PrettifyEmail.linebreak} ${PrettifyEmail.otp(this.payload.otp)}
+      ${PrettifyEmail.linebreak}This OTP will expire in ${this.payload.expiresIn}
+      `;
     return PrettifyEmail.template(this.getSubject(), message);
   };
 

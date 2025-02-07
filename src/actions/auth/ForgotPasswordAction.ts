@@ -36,7 +36,7 @@ export class ForgotPasswordAction implements Action {
     });
     const forgotPasswordEmail = new ForgotPasswordEmail({
       email: this.payload.email,
-      token: resetPasswordToken.token,
+      otp: otpCode,
       expiresIn: resetPasswordToken.expires,
     });
 
@@ -47,6 +47,7 @@ export class ForgotPasswordAction implements Action {
 
     return {
       message: 'Password reset link sent to your email',
+      resetPasswordToken,
     };
   }
 }

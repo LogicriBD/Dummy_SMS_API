@@ -36,7 +36,7 @@ class ExpressRouterImpl {
         controller: new AuthController(),
       },
       {
-        basePath: '/user',
+        basePath: '/users',
         controller: new UserController(),
       },
       {
@@ -48,12 +48,7 @@ class ExpressRouterImpl {
   }
 
   public isPublicRoute(path: string) {
-    for (const route of this.unprotectedRoutes) {
-      if (path.includes(route)) {
-        return true;
-      }
-    }
-    return false;
+    return this.unprotectedRoutes.includes(path);
   }
 
   public traverseRouteTree = (route: SubRoute, basePath: string) => {

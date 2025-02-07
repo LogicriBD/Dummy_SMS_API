@@ -7,7 +7,6 @@ export class UpdateCurrentUserAction implements Action {
   constructor(
     private payload: UpdateUserRequestBody,
     private currentUser: Express.User,
-    private file: Express.Multer.File,
   ) {}
 
   public async execute() {

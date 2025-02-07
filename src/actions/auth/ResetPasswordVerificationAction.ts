@@ -41,7 +41,8 @@ export class ResetPasswordVerificationAction implements Action {
     }
     return {
       message: 'Reset Password Email Verified Successfully',
-      ...resetPasswordToken,
+      resetPasswordToken,
+      success: true,
     };
   }
 

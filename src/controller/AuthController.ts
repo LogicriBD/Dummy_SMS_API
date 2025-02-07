@@ -8,14 +8,17 @@ import { RefreshTokenAction } from '../actions/auth/RefreshTokenAction';
 import { ForgotPasswordAction } from '../actions/auth/ForgotPasswordAction';
 import { ResetPasswordAction } from '../actions/auth/ResetPasswordAction';
 import { ResetPasswordVerificationAction } from '../actions/auth/ResetPasswordVerificationAction';
-import { logoutValidator } from '../validation/auth/LogoutRequest';
-import { authTokenRefreshValidator } from '../validation/auth/AuthTokenRefreshRequest';
-import { forgotPasswordValidator } from '../validation/auth/ForgotPasswordRequest';
-import { resetPasswordValidator } from '../validation/auth/ResetPasswordRequest';
-import { resetPasswordVerificationValidator } from '../validation/auth/ResetPasswordVerificationRequest';
-import { emailVerificationValidator } from '../validation/auth/EmailVerificationRequest';
+import { AuthTokenRefreshRequestBody, authTokenRefreshValidator } from '../validation/auth/AuthTokenRefreshRequest';
+import { ForgotPasswordRequestBody, forgotPasswordValidator } from '../validation/auth/ForgotPasswordRequest';
+import { ResetPasswordRequestBody, resetPasswordValidator } from '../validation/auth/ResetPasswordRequest';
+import {
+  ResetPasswordVerificationRequestBody,
+  resetPasswordVerificationValidator,
+} from '../validation/auth/ResetPasswordVerificationRequest';
+import { EmailVerificationRequestBody, emailVerificationValidator } from '../validation/auth/EmailVerificationRequest';
 import { RegistrationRequestBody, registrationValidator } from '../validation/auth/RegistrationRequest';
 import { RegistrationAction } from '../actions/auth/RegistrationAction';
+import { StatusCodes } from 'http-status-codes';
 
 @Controller
 export class AuthController {
@@ -24,7 +27,11 @@ export class AuthController {
     try {
       const loginAction = new LoginAction(req.body);
       const response = await loginAction.execute();
-      return res.json(response);
+      if (response?.verifyEmailToken) {
+        return res.status(StatusCodes.UNAUTHORIZED).json(response);
+      } else {
+        return res.status(StatusCodes.OK).json(response);
+      }
     } catch (error) {
       next(error);
     }
@@ -45,10 +52,10 @@ export class AuthController {
     }
   }
 
-  @POST('/logout', [logoutValidator])
+  @POST('/logout')
   public async logout(req: Request, res: Response, next: NextFunction) {
     try {
-      const logoutAction = new LogoutAction(req.body, req.user!);
+      const logoutAction = new LogoutAction(req.user!);
       const response = await logoutAction.execute();
       return res.json(response);
     } catch (error) {
@@ -57,7 +64,7 @@ export class AuthController {
   }
 
   @POST('/refresh-token', [authTokenRefreshValidator])
-  public async refreshToken(req: Request, res: Response, next: NextFunction) {
+  public async refreshToken(req: Request<unknown, unknown, AuthTokenRefreshRequestBody>, res: Response, next: NextFunction) {
     try {
       const refreshTokenAction = new RefreshTokenAction(req.body);
       const response = await refreshTokenAction.execute();
@@ -68,7 +75,7 @@ export class AuthController {
   }
 
   @POST('/forgot-password', [forgotPasswordValidator])
-  public async forgotPassword(req: Request, res: Response, next: NextFunction) {
+  public async forgotPassword(req: Request<unknown, unknown, ForgotPasswordRequestBody>, res: Response, next: NextFunction) {
     try {
       const forgotPasswordAction = new ForgotPasswordAction(req.body);
       const response = await forgotPasswordAction.execute();
@@ -79,7 +86,7 @@ export class AuthController {
   }
 
   @POST('/reset-password', [resetPasswordValidator])
-  public async resetPassword(req: Request, res: Response, next: NextFunction) {
+  public async resetPassword(req: Request<unknown, unknown, ResetPasswordRequestBody>, res: Response, next: NextFunction) {
     try {
       const resetPasswordAction = new ResetPasswordAction(req.body);
       const response = await resetPasswordAction.execute();
@@ -90,7 +97,11 @@ export class AuthController {
   }
 
   @POST('/reset-password-verification', [resetPasswordVerificationValidator])
-  public async resetPasswordVerification(req: Request, res: Response, next: NextFunction) {
+  public async resetPasswordVerification(
+    req: Request<unknown, unknown, ResetPasswordVerificationRequestBody>,
+    res: Response,
+    next: NextFunction,
+  ) {
     try {
       const resetPasswordVerificationAction = new ResetPasswordVerificationAction(req.body);
       const response = await resetPasswordVerificationAction.execute();
@@ -101,7 +112,11 @@ export class AuthController {
   }
 
   @POST('/email-verification', [emailVerificationValidator])
-  public async phoneVerification(req: Request, res: Response, next: NextFunction) {
+  public async phoneVerification(
+    req: Request<unknown, unknown, EmailVerificationRequestBody>,
+    res: Response,
+    next: NextFunction,
+  ) {
     try {
       const emailVerificationAction = new EmailVerificationAction(req.body);
       const response = await emailVerificationAction.execute();

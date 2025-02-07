@@ -19,6 +19,8 @@ export interface SMSProps extends Document {
   media?: RemoteFileReference[];
   masked?: boolean;
   read: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const schema: Schema<SMSProps> = new Schema<SMSProps>(

@@ -14,6 +14,7 @@ export type UpdateUserPayload = {
     verifiedAt?: Date;
     otpType: string;
   };
+  password?: string;
 };
 
 export type FindUserParams = {

@@ -87,6 +87,8 @@ class UserRepositoyImpl {
     }
     return await this.findById(id);
   }
+
+  
 }
 
 export const UserRepository = new UserRepositoyImpl();

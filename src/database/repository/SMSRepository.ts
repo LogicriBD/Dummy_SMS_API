@@ -9,25 +9,24 @@ class SMSRepositoryImpl {
 
   public async findSMSByPhone(payload: FindSMSPayload) {
     const findParams: FilterQuery<SMSProps> = {};
+
     if (payload.receiver) {
-      findParams.receiver = {
-        receiver: { $regex: new RegExp(payload.receiver, 'i') },
-      };
+      findParams.receiver = { $regex: new RegExp(payload.receiver, 'i') };
     }
+
+    let query = SMS.find(findParams).sort({ createdAt: -1 });
+
     if (payload.page && payload.limit) {
-      return await SMS.find(findParams)
-        .skip((payload.page - 1) * payload.limit)
-        .limit(payload.limit);
+      query = query.skip((payload.page - 1) * payload.limit).limit(payload.limit);
     }
-    return await SMS.find(findParams);
+
+    return await query;
   }
 
   public async countSMSByPhone(payload: CountSMSPayload) {
     const findParams: FilterQuery<SMSProps> = {};
     if (payload.receiver) {
-      findParams.receiver = {
-        receiver: { $regex: new RegExp(payload.receiver, 'i') },
-      };
+      findParams.receiver = { $regex: new RegExp(payload.receiver, 'i') };
     }
     if (payload.read !== undefined) {
       findParams.read = payload.read;

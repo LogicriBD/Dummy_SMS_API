@@ -13,7 +13,7 @@ export class LoginAction implements Action {
   constructor(private payload: LoginRequestBody) {}
 
   public async execute() {
-    const user = await UserRepository.findByEmail(this.payload.email);
+    const user = await UserRepository.findByEmail(this.payload.username);
 
     const hashedPassword = user.password;
     const passwordMatch = await bcrypt.compare(this.payload.password, hashedPassword);

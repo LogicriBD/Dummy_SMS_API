@@ -37,13 +37,11 @@ export class RegistrationAction implements Action {
     }
     const registrationEmail = new RegistrationEmail({
       email: this.payload.email,
-      token: token.token,
       expiresIn: token.expires,
       otp: otpCode,
     });
     await EmailService.sendEmail(registrationEmail);
     return {
-      user,
       verifyEmailToken: token,
     };
   }
